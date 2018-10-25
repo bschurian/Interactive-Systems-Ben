@@ -68,7 +68,7 @@ for v in [v1, v2]:
     print('i', vLen(v))
     print('i', dot(v, 10))
 
-M = np.array([[1,2,3],[4,5,6],[7,8,9],[0,2,2]])
-v0=np.array([1,1,0])
-v1=np.array([-1,2,5])
-print('m',(v0.transpose() * v1) * M * v0)
+M = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [0, 2, 2]])
+v0 = np.array([1, 1, 0])
+v1 = np.array([-1, 2, 5])
+print('m', (v0.transpose() * v1) * M * v0)

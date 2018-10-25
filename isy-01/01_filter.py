@@ -16,7 +16,7 @@ def im2double(im):
     return out
 
 
-def make_gaussian(size, fwhm = 3, center=None):
+def make_gaussian(size, fwhm=3, center=None):
     """ Make a square gaussian kernel.
 
     size is the length of a side of the square
@@ -25,7 +25,7 @@ def make_gaussian(size, fwhm = 3, center=None):
     """
 
     x = np.arange(0, size, 1, float)
-    y = x[:,np.newaxis]
+    y = x[:, np.newaxis]
 
     if center is None:
         x0 = y0 = size // 2
@@ -33,7 +33,7 @@ def make_gaussian(size, fwhm = 3, center=None):
         x0 = center[0]
         y0 = center[1]
 
-    k = np.exp(-4*np.log(2) * ((x-x0)**2 + (y-y0)**2) / fwhm**2)
+    k = np.exp(-4 * np.log(2) * ((x - x0) ** 2 + (y - y0) ** 2) / fwhm ** 2)
     return k / np.sum(k)
 
 
@@ -48,28 +48,39 @@ def convolution_2d(img, kernel):
     # TODO write convolution of arbritrary sized convolution here
     # Hint: you need the kernelsize
 
-    offset = int(kernel.shape[0]/2)
-    newimg = np.zeros(img.shape)
+    offset = int(kernel.shape[0] / 2)
+    irows, icols = img.shape
+    newimg = np.zeros((irows - offset, icols - offset, offset * 2 + 1, offset * 2 + 1))
+    nrows, ncols, _, _ = newimg.shape
+    for x in range(nrows - 1):
+        for y in range(ncols - 1):
+            newimg[x, y, :, :] = img[x:x + offset * 2 + 1, y:y + offset * 2 + 1]
+    newimg *= kernel
 
-    # YOUR CODE HERE
+    newimg = np.sum(newimg, axis=3)
+    newimg = np.sum(newimg, axis=2)
 
     return newimg
 
 
 if __name__ == "__main__":
-
     # 1. load image in grayscale
-    # 2. convert image to 0-1 image (see im2double)
+    img = cv2.imread("images/Lenna.png", 0)
 
+    # 2. convert image to 0-1 image (see im2double)
+    img = im2double(img)
 
     # image kernels
     sobelmask_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
     sobelmask_y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
     gk = make_gaussian(11)
 
-    # 3 .use image kernels on normalized image
+    # 3 .use image kernels on normalized imageG
+    sobel_x = convolution_2d(img, sobelmask_x)
+    sobel_y = convolution_2d(img, sobelmask_y)
 
     # 4. compute magnitude of gradients
+    mog = np.sqrt(np.square(sobel_x) + np.square(sobel_y))
 
     # Show resulting images
     cv2.imshow("sobel_x", sobel_x)

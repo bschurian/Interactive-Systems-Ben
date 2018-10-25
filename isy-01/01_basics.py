@@ -33,11 +33,11 @@ import time
 # cap = cv2.VideoCapture(0)
 # _, frame = cap.read()
 img = cv2.imread('images/Lenna.png')
-grayImg = cv2.imread('images/Lenna.png', 0)
+grayImgOrig = cv2.imread('images/Lenna.png', 0)
 # frame = np.concatenate(img,grayImg)
 # grayImg = np.expand_dims(grayImg,axis=1)
 irows, icols, icol = img.shape
-grayImg = np.repeat(grayImg, 3).reshape((irows, icols, icol))
+grayImg = np.repeat(grayImgOrig, 3).reshape((irows, icols, icol))
 frame = np.concatenate((grayImg,img), axis=1)
 rows, cols, col = frame.shape
 
