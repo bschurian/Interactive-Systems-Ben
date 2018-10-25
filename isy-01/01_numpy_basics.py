@@ -43,9 +43,11 @@ jV = np.arange(3)
 print('j', jM * jV)
 
 
-# @TODO
-# k = np.random.random((10, 2))
-# print('k', k)
+k = np.random.random((10, 2))
+r = np.sqrt(np.square(k[:,0])+np.square(k[:,1]))
+angle = np.arctan(k[:,0]/k[:,1])
+p = np.column_stack((r,angle))
+print('k', p)
 
 def vLen(v):
     return v.shape[0]
@@ -62,11 +64,9 @@ def dot(v, scalar):
 
 v1 = np.array([1, 2, 3, 4, 5])
 v2 = np.array([-1, 9, 5, 3, 1])
-for x, y in zip(v1, v2):
-    print(x, y)
 for v in [v1, v2]:
-    print('i', vLen(v))
-    print('i', dot(v, 10))
+    print('l', vLen(v))
+    print('l', dot(v, 10))
 
 M = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [0, 2, 2]])
 v0 = np.array([1, 1, 0])
