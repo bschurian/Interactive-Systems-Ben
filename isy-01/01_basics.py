@@ -3,8 +3,6 @@ import cv2
 import math
 import time
 
-
-
 ######################################################################
 # IMPORTANT: Please make yourself comfortable with numpy and python:
 # e.g. https://www.stavros.io/tutorials/python/
@@ -34,25 +32,46 @@ import time
 
 # cap = cv2.VideoCapture(0)
 # _, frame = cap.read()
-frame = cv2.imread('images/Lenna.png')
+img = cv2.imread('images/Lenna.png')
+grayImg = cv2.imread('images/Lenna.png', 0)
+# frame = np.concatenate(img,grayImg)
+# grayImg = np.expand_dims(grayImg,axis=1)
+irows, icols, icol = img.shape
+grayImg = np.repeat(grayImg, 3).reshape((irows, icols, icol))
+frame = np.concatenate((grayImg,img), axis=1)
+rows, cols, col = frame.shape
 
-mode = 0
-while(True):
+Sx = np.array([[1,0,-1],[2,0,-2],[1,0,-1]])
+Sy = Sx.transpose()
+
+while (True):
+    mode = 0
     # Capture frame-by-frame
 
     # wait for key and switch to mode
     ch = cv2.waitKey(1) & 0xFF
     if ch == ord('1'):
         mode = 1
-    # ...
+    if ch == ord('t'):
+        mode = 2
+    if ch == ord('r'):
+        mode = 3
+    # if ch == ord('f'):
+    #     mode = 4
 
     if ch == ord('q'):
         break
-
     if mode == 1:
-        # just example code
-        # your code should implement
         frame = cv2.GaussianBlur(frame, (5, 5), 0)
+    if mode == 2:
+        M = np.float32([[1, 0, 100], [0, 1, 0]])
+        frame = cv2.warpAffine(frame, M, (cols, rows))
+    if mode == 3:
+        M = cv2.getRotationMatrix2D((cols/2,rows/2),30,1)
+        frame = cv2.warpAffine(frame, M, (cols, rows))
+    # if mode == 4:
+    #     M = np.float32([[1, 0, 100], [0, 1, 0]])
+    #     frame = cv2.warpAffine(frame, M, (cols, rows))
 
     # Display the resulting frame
     cv2.imshow('frame', frame)
