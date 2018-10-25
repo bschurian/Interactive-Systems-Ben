@@ -17,17 +17,29 @@ while (True):
         mode = 3
     if ch == ord('4'):
         mode = 4
+    if ch == ord('5'):
+        mode = 5
+    if ch == ord('6'):
+        mode = 6
     # ...
 
     if ch == ord('q'):
         break
 
     if mode == 1:
-        frame = cv2.GaussianBlur(frame, (5, 5), 0)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     if mode == 2:
-        # @TODO
-        frame = cv2.adaptiveThreshold(frame, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+    if mode == 3:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV)
     if mode == 4:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        frame = cv2.adaptiveThreshold(frame, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,31,4)
+    if mode == 5:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(frame, (31, 31), 0)
+        ret3, frame = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    if mode == 6:
         frame = cv2.Canny(frame, 100, 200)
 
     # Display the resulting frame
