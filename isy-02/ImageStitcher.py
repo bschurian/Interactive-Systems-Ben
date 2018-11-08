@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from matplotlib import pyplot as plt
 
 
 # complete the class ImageStitcher
@@ -10,7 +11,6 @@ class ImageStitcher:
     def __init__(self, imagelist):
 
         self.imagelist = imagelist
-
         # match ratio to clean feature area from non-important ones
         self.distanceRatio = 0.75
         # theshold for homography
@@ -37,7 +37,7 @@ class ImageStitcher:
             if len(m) == 2 and m[0].distance < m[1].distance * self.distanceRatio:
                 matches.append((m[0].trainIdx, m[0].queryIdx))
 
-        print "matches:", len(matches)
+        print("matches:", len(matches))
         # we need to compute a homography - more next course
         # computing a homography requires at least 4 matches
         if len(matches) > 4:
@@ -70,7 +70,6 @@ class ImageStitcher:
         for ((idx2, idx1), s) in zip(matches, status):
             # only process the match if the keypoint was successfully matched
             if s == 1:
-
                 # x - columns
                 # y - rows
                 (x1, y1) = kp1[idx1].pt
@@ -90,29 +89,41 @@ class ImageStitcher:
         return vis
 
     def stitch_to_panorama(self):
-
-        # YOUR CODE HERE
         # 1. create feature extraction
+        sift = cv2.xfeatures2d.SIFT_create()
         # 2. detect and compute keypoints and descriptors for the first image
-
+        panorama_img = self.imagelist[0]
         # 3. loop through the remaining images and detect and compute keypoints + descriptors
+        i = 1
+        while i < len(self.imagelist):
+            imgi = self.imagelist[i]
 
-        # 4. match features between the two images consecutive images and check if the
-        # result might be None.
+            kp0, des0 = sift.detectAndCompute(panorama_img, None)
+            kpi, desi = sift.detectAndCompute(imgi, None)
+            # termination criteria
+            ch = cv2.waitKey(1) & 0xFF
+            # # 4. match features between the two images consecutive images and check if the
+            # # result might be None.
+            (H, status, matchList) = self.match_keypoints(kp0, kpi, des0, desi)
+            # # if not enough matches were found we can't stitch
+            # # and we break here
+            if len(matchList) < 2:
+                print("NOT ENOUGH MATCHES FOUND BETWEEN %s. AND %s. IMAGES." % (i, i + 1))
+                break
 
-        # if not enough matches were found we can't stitch
-        # and we break here
+            # The result contains matches and a status object that can be used to draw the matches.
+            # Additionally (and more importantly it contains the transformation matrix (homography matrix)
+            # commonly refered to as H. That can and should be used with cv2.warpPerspective to transform
+            # consecutive images such that they fit together.
+            # make sure the size of the new (warped) image is large enough to support the overlap
+            # the resulting image might be too wide (lot of black areas on the right) because there is a
+            # substantial overlap
+            panorama_img = cv2.warpPerspective(panorama_img , H, (panorama_img.shape[1]+imgi.shape[1], panorama_img.shape[0]))
+            panorama_img[0:imgi.shape[0], 0:imgi.shape[1]] = imgi
 
-        # The result contains matches and a status object that can be used to draw the matches.
-        # Additionally (and more importantly it contains the transformation matrix (homography matrix)
-        # commonly refered to as H. That can and should be used with cv2.warpPerspective to transform
-        # consecutive images such that they fit together.
-        # make sure the size of the new (warped) image is large enough to support the overlap
+            # 5. create a new image using draw_matches containing the visualized matches
+            # panorama_img = self.draw_matches(panorama_img, imgi, kp0, kpi, matchList, status)
 
-        # the resulting image might be too wide (lot of black areas on the right) because there is a
-        # substantial overlap
-
-        # 5. create a new image using draw_matches containing the visualized matches
-
+            i += 1
         # 6. return the resulting stitched image
-        return (matchList, panoramaImg)
+        return (matchList, panorama_img)
