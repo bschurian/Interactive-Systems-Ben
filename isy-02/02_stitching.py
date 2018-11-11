@@ -15,7 +15,7 @@ imgs = []
 filenames = ["images/pano3.jpg","images/pano2.jpg", "images/pano1.jpg"]
 # filenames = ["images/pano6.jpg","images/pano5.jpg", "images/pano4.jpg"]
 for filename in filenames:
-    imgs.append(cv2.imread(filename, 0))
+    imgs.append(cv2.imread(filename, 1))
 
 # order of input images is important is important (from right to left)
 imageStitcher = ImageStitcher(imgs)  # list of images
@@ -38,7 +38,7 @@ else:
             name = "4To6"
         else:
             name = "error"
-        cv2.imwrite("images-"+name+".jpg",result)
+        cv2.imwrite("panorama-"+name+".jpg",result)
         ch = cv2.waitKey(1) & 0xFF
         if ch == ord('q'):
             break

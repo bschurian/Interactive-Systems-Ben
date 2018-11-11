@@ -110,6 +110,15 @@ class ImageStitcher:
             if len(matchList) < 2:
                 print("NOT ENOUGH MATCHES FOUND BETWEEN %s. AND %s. IMAGES." % (i, i + 1))
                 break
+            imgasdf = self.draw_matches(panorama_img, imgi, kp0, kpi, matchList, status)
+            while True:
+                print(123)
+                cv2.imshow("matches"+str(i)+".jpg", imgasdf)
+                cv2.imwrite("matches"+str(i)+".jpg", imgasdf)
+                ch = cv2.waitKey(1) & 0xFF
+                if ch == ord('w'):
+                    break
+
 
             # The result contains matches and a status object that can be used to draw the matches.
             # Additionally (and more importantly it contains the transformation matrix (homography matrix)
@@ -118,12 +127,12 @@ class ImageStitcher:
             # make sure the size of the new (warped) image is large enough to support the overlap
             # the resulting image might be too wide (lot of black areas on the right) because there is a
             # substantial overlap
-            panorama_img = cv2.warpPerspective(panorama_img , H, (panorama_img.shape[1]+imgi.shape[1], panorama_img.shape[0]))
+            panorama_img = cv2.warpPerspective(panorama_img, H,
+                                               (panorama_img.shape[1] + imgi.shape[1], panorama_img.shape[0]))
             panorama_img[0:imgi.shape[0], 0:imgi.shape[1]] = imgi
 
-            # 5. create a new image using draw_matches containing the visualized matches
-            # panorama_img = self.draw_matches(panorama_img, imgi, kp0, kpi, matchList, status)
-
             i += 1
+            # 5. create a new image using draw_matches containing the visualized matches
+
         # 6. return the resulting stitched image
-        return (matchList, panorama_img)
+        return (matchList, imgasdf)
