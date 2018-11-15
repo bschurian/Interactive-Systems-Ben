@@ -38,8 +38,9 @@ else:
             name = "4To6"
         else:
             name = "error"
-        cv2.imwrite("panorama-"+name+".jpg",result)
         ch = cv2.waitKey(1) & 0xFF
         if ch == ord('q'):
             break
+cv2.imwrite("panorama-" + name + ".jpg", result)
+cv2.imwrite("last-drawn-matches-" + name + ".jpg", matchlist[len(matchlist)-1])
 cv2.destroyAllWindows()

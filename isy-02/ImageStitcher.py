@@ -93,6 +93,7 @@ class ImageStitcher:
         sift = cv2.xfeatures2d.SIFT_create()
         # 2. detect and compute keypoints and descriptors for the first image
         panorama_img = self.imagelist[0]
+        drawnMatches = []
         # 3. loop through the remaining images and detect and compute keypoints + descriptors
         i = 1
         while i < len(self.imagelist):
@@ -111,13 +112,13 @@ class ImageStitcher:
                 print("NOT ENOUGH MATCHES FOUND BETWEEN %s. AND %s. IMAGES." % (i, i + 1))
                 break
             imgasdf = self.draw_matches(panorama_img, imgi, kp0, kpi, matchList, status)
-            while True:
-                print(123)
-                cv2.imshow("matches"+str(i)+".jpg", imgasdf)
-                cv2.imwrite("matches"+str(i)+".jpg", imgasdf)
-                ch = cv2.waitKey(1) & 0xFF
-                if ch == ord('w'):
-                    break
+            drawnMatches.append(imgasdf)
+            # while True:
+            #     cv2.imshow("matches"+str(i)+".jpg", imgasdf)
+            #     cv2.imwrite("matches"+str(i)+".jpg", imgasdf)
+            #     ch = cv2.waitKey(1) & 0xFF
+            #     if ch == ord('q'):
+            #         break
 
 
             # The result contains matches and a status object that can be used to draw the matches.
@@ -135,4 +136,4 @@ class ImageStitcher:
             # 5. create a new image using draw_matches containing the visualized matches
 
         # 6. return the resulting stitched image
-        return (matchList, imgasdf)
+        return (drawnMatches, panorama_img)
