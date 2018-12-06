@@ -65,7 +65,6 @@ def refill_real(img, result, clustermask, cluster_colors):
     for x in range(w):
         for y in range(h):
             cid = clustermask[x, y]
-            print(cluster_colors[cid], result[x, y])
             result[x, y] = cluster_colors[cid]
 
 def initialize(img):
