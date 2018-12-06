@@ -145,17 +145,26 @@ class Ransac:
             self.step(i)
 
 
-rpg = RansacPointGenerator(100, 45)
-print(rpg.points)
+i = 1
+standard_thresh = 0.05
+standard_P = (100, 45)
+configs = [('few P + lot of noise', (30, 200), standard_thresh), ('normal P', standard_P, standard_thresh),
+           ('Many P', (300, 10), standard_thresh),
+           ('few P + noise + high thresg', (30, 200),0.65), ('Many P + low thres', (300, 10), .000001)]
+plt.figure(figsize=(20, 10))
+for (c_name, (in_P, out_P), thresh) in configs:
+    rpg = RansacPointGenerator(in_P, out_P)
 
-ransac = Ransac(rpg.points, 0.05)
-ransac.run()
+    ransac = Ransac(rpg.points, 0.05)
+    ransac.run()
 
-# print rpg.points.shape[1]
-plt.plot(rpg.points[0, :], rpg.points[1, :], 'ro')
-m = ransac.best_model.m
-b = ransac.best_model.b
-plt.plot([0, 1], [m * 0 + b, m * 1 + b], color='k', linestyle='-', linewidth=2)
-# #
-plt.axis([0, 1, 0, 1])
+    plt.subplot(330 + i)
+    plt.plot(rpg.points[0, :], rpg.points[1, :], 'ro')
+    m = ransac.best_model.m
+    b = ransac.best_model.b
+    plt.plot([0, 1], [m * 0 + b, m * 1 + b], color='k', linestyle='-', linewidth=2)
+    plt.title(c_name)
+
+    plt.axis([0, 1, 0, 1])
+    i += 1
 plt.show()

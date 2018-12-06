@@ -1,0 +1,5 @@
+few P + lot of noise            : findet in 90% aller fällen die richtige Line, manchmal liegt es aber auch komplett daneben (schlechtes Muster im Noise)
+normal P                        : Line ist manchmal etwas krumm (siht aus wie rotiert um den Mittelpunkt)
+Many P                          : perfekt
+few P + noise + high thresg     : siehe "few P + lot of noise", liegt öfter krumm auf der Line, die plausibel aussieht
+Many P + low thres              : immer perfekte Richtung, manchmal "offcenter" (parrallel verschoben) (schlechtes Sampling bei RandomGenerator ?)
