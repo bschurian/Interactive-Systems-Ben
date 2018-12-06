@@ -83,8 +83,8 @@ cv2.destroyAllWindows()
 while True:
     ret, frame = cap.read()
 
-    # TODO RM
-    frame = marker
+    # # TODO RM
+    # frame = marker
 
     cv2.imshow("frame", frame)
     ch = cv2.waitKey(1) & 0xFF
@@ -108,8 +108,8 @@ while True:
         continue
 
     # extract 2d points from matches data structure
-    p0 = [keypointsMarker[m.trainIdx].pt for m in matches]
-    p1 = [keypointsFrame[m.queryIdx].pt for m in matches]
+    p0 = [keypointsFrame[m.trainIdx].pt for m in matches]
+    p1 = [keypointsMarker[m.queryIdx].pt for m in matches]
     # transpose vectors
     p0, p1 = np.array([p0, p1])
 
@@ -133,8 +133,8 @@ while True:
     # p0, p1 = p0[mask], p1[mask]
     # get the size of the marker and form a quad in pixel coords np float array using w/h as the corner points
     p0, p1 = p0[mask], p1[mask]
-    w1, h1, _ = marker.shape
-    quad = np.array([[0, 0], [0, h1], [w1, h1], [w1, 0]], np.float32)
+    wm, hm, _ = marker.shape
+    quad = np.array([[0, 0], [0, hm], [wm, hm], [wm, 0]], np.float32)
 
     # perspectiveTransform needs a 3-dimensional array
     # quad = np.array([quad])
@@ -146,7 +146,7 @@ while True:
     vis = np.ones(frame.shape)
 
     # render virtual object on top of quad
-    render_virtual_object(vis, 0, 0, h1, w1, quad)
+    render_virtual_object(frame, 0, 0, hm, wm, quad)
 
-    cv2.imshow('Interactive Systems: AR Tracking', vis)
+    cv2.imshow('Interactive Systems: AR Tracking', frame)
 cv2.destroyAllWindows()
