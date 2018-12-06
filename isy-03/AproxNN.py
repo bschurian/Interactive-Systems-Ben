@@ -42,7 +42,16 @@ sift = cv2.xfeatures2d.SIFT_create()
 kp1, des1 = sift.detectAndCompute(marker, None)
 
 cap = cv2.VideoCapture(0)
-# cv2.namedWindow('Interactive Systems: AR Tracking')
+#my cam is very dark at the beginning
+#rm this loop if your cam is better
+while True:
+    ret, frame = cap.read()
+
+    cv2.imshow("press q if camera lights up",frame)
+    ch = cv2.waitKey(1) & 0xFF
+    if ch == ord('q'):
+        break
+cv2.destroyAllWindows()
 while True:
 
     ret, frame = cap.read()

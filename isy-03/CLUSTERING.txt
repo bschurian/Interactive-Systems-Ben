@@ -1,0 +1,2 @@
+ a) schlecht gewählte Startcluster  können den Algorithmus versauen
+ b) -
