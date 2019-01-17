@@ -19,5 +19,18 @@ class CNNModel:
 
     @staticmethod
     def load_model(classes=10):
-        # TODO build your own model here
+        model = Sequential()
+        model.add(Convolution2D(filters=32,kernel_size=3,padding='same',activation='relu',input_shape=(CNNModel.img_rows, CNNModel.img_cols, 1)))
+        # model.add(Convolution2D(filters=32,activation='relu'))
+        model.add(Convolution2D(32, 1, activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2,2)))
+        model.add(Dropout(rate=0.25))
+        model.add(Convolution2D(filters=64,kernel_size=3,padding='same',activation='relu'))
+        model.add(Convolution2D(filters=64,kernel_size=1,activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2,2)))
+        model.add(Dropout(rate=0.25))
+        model.add(Flatten())
+        model.add(Dense(units=512, activation='relu'))
+        model.add(Dense(units=classes, activation='softmax'))
+        model.compile(loss='categorical_crossentropy', optimizer ='adam', metrics = ['accuracy'])
         return model

@@ -1,8 +1,9 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
+resDir = "results/"
 
-def plot_model_history(history):
+def plot_model_history(history,suffix):
     # list all data in history
     print(history.history.keys())
     # summarize history for accuracy
@@ -12,6 +13,7 @@ def plot_model_history(history):
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(resDir+suffix+"_acc.png")
     plt.show()
     # summarize history for loss
     plt.plot(history.history['loss'])
@@ -20,10 +22,11 @@ def plot_model_history(history):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(resDir+suffix+"_loss.png")
     plt.show()
 
 
-def plot_result_examples(model, X_test, y_test, img_rows, img_cols):
+def plot_result_examples(model, X_test, y_test, img_rows, img_cols, suffix):
     """
     The predict_classes function outputs the highest probability class
     according to the trained classifier for each input example.
@@ -40,11 +43,12 @@ def plot_result_examples(model, X_test, y_test, img_rows, img_cols):
         plt.subplot(3, 3, i + 1)
         plt.imshow(X_test[correct].reshape(img_rows, img_cols), cmap='gray', interpolation='none')
         plt.title("Predicted {}, Class {}".format(predicted_classes[correct], y_test[correct]))
+    plt.savefig(resDir+suffix+"_correct_examples.png")
 
     plt.figure()
     for i, incorrect in enumerate(incorrect_indices[:9]):
         plt.subplot(3, 3, i + 1)
         plt.imshow(X_test[incorrect].reshape(img_rows, img_cols), cmap='gray', interpolation='none')
         plt.title("Predicted {}, Class {}".format(predicted_classes[incorrect], y_test[incorrect]))
-
+    plt.savefig(resDir+suffix+"_wrong_examples.png")
     plt.show()
